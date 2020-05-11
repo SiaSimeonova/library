@@ -19,6 +19,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
  * (or tab) or some part of a html page where a Vaadin application is embedded.
@@ -41,7 +42,7 @@ public class MyUI extends UI {
         filterText.setPlaceholder("filter by name...");
         filterText.addValueChangeListener(e -> updateList());
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
-
+        
         Button clearFilterTextBtn = new Button(FontAwesome.TIMES);
         clearFilterTextBtn.setDescription("Clear the current filter");
         clearFilterTextBtn.addClickListener(e -> filterText.clear());
@@ -50,6 +51,14 @@ public class MyUI extends UI {
         filtering.addComponents(filterText, clearFilterTextBtn);
         filtering.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 
+        Button addCustomerBtn = new Button("Add customer");
+        addCustomerBtn.addClickListener(e -> {
+        	grid.asSingleSelect().clear();
+        	form.setCustomer(new Customer());
+        });
+        
+        HorizontalLayout toolbar = new HorizontalLayout(filtering, addCustomerBtn);
+        
         grid.setColumns("firstName", "lastName", "email");
 
         HorizontalLayout main = new HorizontalLayout(grid, form);
@@ -57,12 +66,24 @@ public class MyUI extends UI {
         grid.setSizeFull();
         main.setExpandRatio(grid, 1);
 
-        layout.addComponents(filtering, main);
+        layout.addComponents(toolbar, main);
 
         // fetch list of Customers from service and assign it to Grid
         updateList();
 
         setContent(layout);
+        
+        form.setVisible(false);
+        
+        grid.asSingleSelect().addValueChangeListener(event -> {
+        	if(event.getValue() == null) {
+        		form.setVisible(false);
+        	}else {
+        		form.setCustomer(event.getValue());
+        	}
+        	
+        });
+        
     }
 
     public void updateList() {
