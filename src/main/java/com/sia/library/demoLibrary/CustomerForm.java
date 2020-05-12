@@ -22,11 +22,11 @@ public class CustomerForm extends FormLayout {
 
     private CustomerService service = CustomerService.getInstance();
     private Customer customer;
-    private MyUI myUI;
+    private MyUI2 myUI;
     private Binder<Customer> binder = new Binder<>(Customer.class);
 
-    public CustomerForm(MyUI myUI) {
-        this.myUI = myUI;
+    public CustomerForm(MyUI2 myUI2) {
+        this.myUI = myUI2;
 
         setSizeUndefined();
         HorizontalLayout buttons = new HorizontalLayout(save, delete);
